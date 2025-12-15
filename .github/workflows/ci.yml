@@ -41,7 +41,7 @@ jobs:
         run: pnpm format:check
 
       - name: Test
-        run: pnpm test --coverage
+        run: pnpm test:coverage
 
       - name: Upload Coverage
         uses: codecov/codecov-action@v4
