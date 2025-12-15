@@ -172,20 +172,32 @@ presets: [['nativewind/babel', { plugins: [...] }]]
 - pnpm store caching includes transitive dependencies not in lockfile
 - Native module plugins have different resolution in test environment
 
+**Important**: Distinguish between **Babel plugin resolution** and **Jest module resolution**:
+
+- **Babel plugin errors** (stack trace shows `@babel/core/lib/config/files/plugins.js`): Must install the actual package
+- **Jest runtime errors**: Can use `moduleNameMapper` mocks
+
 **Solutions**:
 
-1. Add a Jest mock for the missing module:
+1. **For Babel plugin errors** - Install the package directly:
+
+   ```bash
+   pnpm add <package-name>
+   ```
+
+   Example: `pnpm add react-native-worklets` (required by babel-preset-expo)
+
+2. **For Jest runtime errors only** - Add a mock:
    ```bash
    mkdir -p __mocks__/<package-name>
    echo "module.exports = function () { return {}; };" > __mocks__/<package-name>/plugin.js
    ```
-2. Add to `jest.config.js` moduleNameMapper:
+   Then add to `jest.config.js` moduleNameMapper:
    ```javascript
    moduleNameMapper: {
      '<package-name>/plugin': '<rootDir>/__mocks__/<package-name>/plugin.js',
    }
    ```
-3. If it's a real dependency, install it: `pnpm add <package-name>`
 
 ### 2. ".plugins is not a valid Plugin property"
 

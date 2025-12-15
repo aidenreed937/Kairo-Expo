@@ -668,18 +668,32 @@ comet create service <service_name>
 - pnpm store 可能缓存了一些未在 lockfile 中声明的传递依赖
 - 某些原生模块的 Babel 插件在测试环境中有不同的解析行为
 
+**重要**：区分 **Babel 插件解析** 和 **Jest 模块解析**：
+
+- **Babel 插件错误**（堆栈包含 `@babel/core/lib/config/files/plugins.js`）：必须安装实际的包
+- **Jest 运行时错误**：可以使用 `moduleNameMapper` mock
+
 **解决方案**：
 
-1. 在 `__mocks__/` 目录下创建对应的 mock 文件
-2. 在 `jest.config.js` 的 `moduleNameMapper` 中配置映射
-3. 如果确实需要该依赖，直接安装：`pnpm add <package-name>`
+1. **Babel 插件错误** - 直接安装包：
 
-```javascript
-// jest.config.js
-moduleNameMapper: {
-  '<package-name>/plugin': '<rootDir>/__mocks__/<package-name>/plugin.js',
-}
-```
+   ```bash
+   pnpm add <package-name>
+   ```
+
+   示例：`pnpm add react-native-worklets`（babel-preset-expo 需要）
+
+2. **Jest 运行时错误** - 添加 mock：
+   ```bash
+   mkdir -p __mocks__/<package-name>
+   echo "module.exports = function () { return {}; };" > __mocks__/<package-name>/plugin.js
+   ```
+   然后在 `jest.config.js` 的 `moduleNameMapper` 中添加：
+   ```javascript
+   moduleNameMapper: {
+     '<package-name>/plugin': '<rootDir>/__mocks__/<package-name>/plugin.js',
+   }
+   ```
 
 #### ".plugins is not a valid Plugin property" 错误
 

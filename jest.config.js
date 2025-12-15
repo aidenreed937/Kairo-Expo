@@ -12,8 +12,6 @@ module.exports = {
     '^@core/(.*)$': '<rootDir>/src/core/$1',
     '^@features/(.*)$': '<rootDir>/src/features/$1',
     '\\.css$': '<rootDir>/__mocks__/styleMock.js',
-    // Mock for react-native-worklets (may be required by some versions of reanimated)
-    'react-native-worklets/plugin': '<rootDir>/__mocks__/react-native-worklets/plugin.js',
   },
   // Only collect coverage from files that have corresponding tests
   // Add more patterns as tests are written
