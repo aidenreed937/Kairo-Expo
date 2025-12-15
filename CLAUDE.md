@@ -29,9 +29,9 @@ pnpm test             # jest
 pnpm test:watch       # jest --watch
 pnpm test:coverage    # jest --coverage
 
-# Build
+# Build & Diagnostics
 pnpm prebuild         # expo prebuild --clean (generates android/ios)
-pnpm doctor           # npx expo doctor
+npx expo-doctor       # Expo SDK compatibility check
 ```
 
 ## Architecture
@@ -97,17 +97,17 @@ Configured in `tsconfig.json` and `babel.config.js`:
 
 ## Naming Conventions
 
-| Type | Format | Example |
-|------|--------|---------|
-| Directories | `kebab-case` | `user-profile/` |
-| React components | `PascalCase.tsx` | `UserProfileScreen.tsx` |
-| Non-component modules | `camelCase.ts` | `httpClient.ts` |
-| Hooks | `useXxx.ts` | `useCounterStore.ts` |
-| Zustand stores | `use<Name>Store` | `useCounterStore` |
-| TanStack Query | `useXxxQuery`, `useXxxMutation` | `useUserQuery` |
-| Repository interface | `<name>Repository.ts` | `counterRepository.ts` |
-| Repository impl | `<Name>RepositoryImpl.ts` | `CounterRepositoryImpl.ts` |
-| Tests | `*.test.ts(x)` | `CounterScreen.test.tsx` |
+| Type                  | Format                          | Example                    |
+| --------------------- | ------------------------------- | -------------------------- |
+| Directories           | `kebab-case`                    | `user-profile/`            |
+| React components      | `PascalCase.tsx`                | `UserProfileScreen.tsx`    |
+| Non-component modules | `camelCase.ts`                  | `httpClient.ts`            |
+| Hooks                 | `useXxx.ts`                     | `useCounterStore.ts`       |
+| Zustand stores        | `use<Name>Store`                | `useCounterStore`          |
+| TanStack Query        | `useXxxQuery`, `useXxxMutation` | `useUserQuery`             |
+| Repository interface  | `<name>Repository.ts`           | `counterRepository.ts`     |
+| Repository impl       | `<Name>RepositoryImpl.ts`       | `CounterRepositoryImpl.ts` |
+| Tests                 | `*.test.ts(x)`                  | `CounterScreen.test.tsx`   |
 
 ## Git Workflow
 
@@ -134,3 +134,11 @@ See `.claude/skills/feature-generator/SKILL.md` for detailed templates.
 - `@testing-library/react-native` for component testing
 - Coverage threshold: 70% (branches, functions, lines, statements)
 - Tests mirror source structure in `__tests__/`
+- pnpm-compatible `transformIgnorePatterns` configured in `jest.config.js`
+
+## ESLint Configuration
+
+- Uses ESLint 9 flat config format (`eslint.config.mjs`)
+- TypeScript-ESLint for type-aware linting
+- React and React Hooks plugins
+- Prettier integration via `eslint-config-prettier`

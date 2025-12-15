@@ -40,29 +40,21 @@ export function unwrapOr<T, E>(result: Result<T, E>, defaultValue: T): T {
   return defaultValue;
 }
 
-export function map<T, U, E>(
-  result: Result<T, E>,
-  fn: (value: T) => U
-): Result<U, E> {
+export function map<T, U, E>(result: Result<T, E>, fn: (value: T) => U): Result<U, E> {
   if (result.ok) {
     return ok(fn(result.value));
   }
   return result;
 }
 
-export function mapErr<T, E, F>(
-  result: Result<T, E>,
-  fn: (error: E) => F
-): Result<T, F> {
+export function mapErr<T, E, F>(result: Result<T, E>, fn: (error: E) => F): Result<T, F> {
   if (!result.ok) {
     return err(fn(result.error));
   }
   return result;
 }
 
-export async function tryCatch<T>(
-  fn: () => Promise<T>
-): Promise<Result<T, Error>> {
+export async function tryCatch<T>(fn: () => Promise<T>): Promise<Result<T, Error>> {
   try {
     const value = await fn();
     return ok(value);

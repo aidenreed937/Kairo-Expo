@@ -9,12 +9,7 @@ type Props = {
   onReset: () => void;
 };
 
-export function CounterView({
-  value,
-  onIncrement,
-  onDecrement,
-  onReset,
-}: Props) {
+export function CounterView({ value, onIncrement, onDecrement, onReset }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.value}>{value}</Text>
@@ -29,12 +24,7 @@ export function CounterView({
       </View>
 
       <View style={styles.resetButton}>
-        <PrimaryButton
-          title="Reset"
-          onPress={onReset}
-          variant="outline"
-          size="md"
-        />
+        <PrimaryButton title="Reset" onPress={onReset} variant="outline" size="md" />
       </View>
     </View>
   );

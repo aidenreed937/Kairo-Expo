@@ -8,12 +8,7 @@ export function CounterScreen() {
 
   return (
     <View style={styles.container}>
-      <CounterView
-        value={value}
-        onIncrement={inc}
-        onDecrement={dec}
-        onReset={reset}
-      />
+      <CounterView value={value} onIncrement={inc} onDecrement={dec} onReset={reset} />
     </View>
   );
 }

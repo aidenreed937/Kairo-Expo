@@ -18,6 +18,7 @@
 > 本文档的“推荐默认组合”是：Expo（Prebuild / CNG） + New Architecture + Greenfield。
 >
 > 说明：
+>
 > - 目录分层与工程约定（`src/app`、`src/core`、`src/features`）在 Expo/Bare RN 下都可保持一致。
 > - 构建与环境切换属于“模式维度”，应在 `comet.yaml` 中固化，避免不同项目各自发挥。
 
@@ -46,18 +47,19 @@
   - 敏感信息：Keychain/Keystore（可通过社区库封装；脚手架只提供抽象接口与示例实现）。
 - 国际化：`i18next` + `react-i18next`（或 FormatJS，按需替换）。
 - 监控与错误上报：Sentry（或其他平台，脚手架只依赖抽象接口）。
-- 代码规范：ESLint + Prettier + TypeScript（`tsc --noEmit`）。
+- 代码规范：ESLint 9（flat config） + Prettier + TypeScript（`tsc --noEmit`）。
 - 测试：
   - 单元/组件：Jest + `@testing-library/react-native`
+  - pnpm 兼容：需配置 `transformIgnorePatterns` 处理 `.pnpm` 目录结构
   - E2E：Detox（可选，按团队落地成本启用）
 
 ### 2.0 模式维度选择建议（推荐默认）
 
-| 模式维度 | 推荐选择 | 理由 | 何时改选/注意点 |
-|---|---|---|---|
+| 模式维度 | 推荐选择               | 理由                                                                                                                                                                                                                          | 何时改选/注意点                                                                                                                                                      |
+| -------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 构建工具 | Expo（Prebuild / CNG） | 兼顾“自动化原生配置”和“可写原生代码”：默认用 JS/TS 迭代，遇到原生需求可通过 Prebuild 生成 `android/`、`ios/`，并用 Config Plugin 注入 Gradle/Info.plist/原生代码改动；如果你熟悉 Kotlin，这条路线能较低成本做原生扩展与调试。 | 若项目需要深度定制原生构建链路（大量手改 Gradle/Xcode、复杂私有 SDK、强约束企业构建系统），或团队不愿维护 Config Plugin，则考虑直接 Bare RN（纯 React Native CLI）。 |
-| 底层架构 | New Architecture | React Native 新架构（JSI/TurboModules/Fabric）已是主流方向；对“交易类应用”的高频列表、复杂图表与交互来说，更低的跨端开销与更稳定的渲染/交互链路更有利。并且在较新的 RN 版本中，新架构已默认开启，甚至逐步走向“仅新架构”。 | 关注三方库兼容性：少量旧库可能仍依赖旧架构或有适配问题；模板应在升级 RN 前做一次依赖审计与灰度验证。 |
-| 集成方式 | Greenfield（全量 RN） | 若没有既存的庞大原生代码库，全量 RN 交付能避免混合开发的路由栈/生命周期/资源与构建系统的复杂度，减少“边界层”问题（线程、桥接、调试、升级风险）。 | 若你已有成熟原生 App 且必须渐进迁移，则选择 Brownfield（RN 作为模块嵌入）；但需额外投入解决：双路由栈、资源与权限统一、原生/JS 依赖管理、发版与热更新策略等。 |
+| 底层架构 | New Architecture       | React Native 新架构（JSI/TurboModules/Fabric）已是主流方向；对“交易类应用”的高频列表、复杂图表与交互来说，更低的跨端开销与更稳定的渲染/交互链路更有利。并且在较新的 RN 版本中，新架构已默认开启，甚至逐步走向“仅新架构”。     | 关注三方库兼容性：少量旧库可能仍依赖旧架构或有适配问题；模板应在升级 RN 前做一次依赖审计与灰度验证。                                                                 |
+| 集成方式 | Greenfield（全量 RN）  | 若没有既存的庞大原生代码库，全量 RN 交付能避免混合开发的路由栈/生命周期/资源与构建系统的复杂度，减少“边界层”问题（线程、桥接、调试、升级风险）。                                                                              | 若你已有成熟原生 App 且必须渐进迁移，则选择 Brownfield（RN 作为模块嵌入）；但需额外投入解决：双路由栈、资源与权限统一、原生/JS 依赖管理、发版与热更新策略等。        |
 
 这些选择在脚手架中应固化为 `comet.yaml` 的 `build_tool` / `architecture` / `integration` 三个字段，并驱动模板分支与生成逻辑（而不是写死在文档里靠人记忆）。
 
@@ -66,6 +68,7 @@
 以下版本来自 `npm view <pkg> version` 查询结果（稳定版），用于“了解当下生态版本分布”。实际项目以模板锁定版本为准。
 
 特别注意：
+
 - Expo 项目不建议随意将 `react`/`react-native` 升到 npm 最新：应以 Expo SDK 约束为准（SDK 升级时整体迁移）。
 - Bare RN 项目可更自由升级，但需配合原生构建、三方库与新架构兼容性一起验证。
 
@@ -115,12 +118,13 @@
 ```
 
 说明：
+
 - 不建议在“文档”里长期硬编码版本作为权威来源：模板仓库应以 `package.json` + lockfile（`pnpm-lock.yaml`/`yarn.lock`/`package-lock.json`）为唯一真相源。
 - 建议定期运行：
   - Bare RN：`npx react-native doctor`
   - Expo：`npx expo doctor`
   - 依赖检查：`npm outdated`（或 pnpm/yarn 对应命令）
-  并在确认 iOS/Android 构建与 E2E 通过后再升级。
+    并在确认 iOS/Android 构建与 E2E 通过后再升级。
 
 ## 3. 目录结构设计（项目骨架）
 
@@ -144,6 +148,7 @@ project_root/
 ```
 
 说明：
+
 - `comet.yaml`：脚手架工具自己的配置文件，用于记录状态管理类型、路由实现、是否启用某些模块等。
 - 若采用 Expo（Prebuild），`android/`、`ios/` 通常由 `expo prebuild` 生成并由 Config Plugin 驱动“可复现的原生改动”；原则上避免直接手改生成产物而不回写到 config/plugin。
 - Expo Prebuild 是否提交 `android/`、`ios/`：
@@ -262,6 +267,7 @@ __tests__/
   - 暴露统一 `bootstrap()`/`App` 入口，平台入口文件（`index.js`）尽量只负责注册组件。
 
 关于 `app/di.ts`（可选）：
+
 - React 生态通常不需要“重量级 DI 容器”；脚手架推荐使用：
   - 纯函数注入（构造参数/工厂函数）+ hooks
   - 或轻量 Context 作为依赖收口
@@ -307,7 +313,7 @@ __tests__/
 
 ```ts
 // features/counter/presentation/stores/useCounterStore.ts
-import {create} from 'zustand';
+import { create } from 'zustand';
 
 type CounterState = {
   value: number;
@@ -317,12 +323,13 @@ type CounterState = {
 
 export const useCounterStore = create<CounterState>((set) => ({
   value: 0,
-  inc: () => set((s) => ({value: s.value + 1})),
-  dec: () => set((s) => ({value: s.value - 1})),
+  inc: () => set((s) => ({ value: s.value + 1 })),
+  dec: () => set((s) => ({ value: s.value - 1 })),
 }));
 ```
 
 脚手架在生成 feature 时，可以选择：
+
 - 生成基础的 store（Zustand）模板或 Redux Toolkit slice 模板。
 - 允许通过参数选择是否包含 `domain/data` 层（纯 UI feature 可以只生成 presentation）。
 
@@ -347,9 +354,9 @@ export type RootStackParamList = {
 
 ```tsx
 // app/navigation/RootNavigator.tsx（片段）
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import type {RootStackParamList} from './routes';
-import {CounterScreen} from '../../features/counter/presentation/screens/CounterScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import type { RootStackParamList } from './routes';
+import { CounterScreen } from '../../features/counter/presentation/screens/CounterScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -364,6 +371,7 @@ export function RootNavigator() {
 
 脚手架生成 feature 时，如果指定了 `--route`，自动为该 feature 生成 Screen 与路由声明，并在 Root Navigator 预留的占位标记处插入注册代码（通过注释占位符或代码生成实现）。  
 约定与自动化的关系：
+
 - 文档中对路由组织方式的说明属于“架构约定”，而实际的路由声明/注册工作应尽量由 `comet` CLI 自动完成。
 - 推荐通过 `comet create feature --route ...` 新增路由，而不是手动编辑 Root Navigator，以减少人为疏漏并保证一致性。
 
@@ -380,6 +388,7 @@ export function RootNavigator() {
 ## 7. 环境与配置管理
 
 环境切换建议拆成两层看：
+
 - 原生构建维度（必须存在）：
   - iOS：Scheme/Configuration（Debug/Staging/Release 等）
   - Android：productFlavors（dev/staging/prod）+ buildTypes（debug/release）
@@ -481,17 +490,17 @@ org: com.example
 
 package_manager: pnpm
 
-build_tool: expo_prebuild   # expo_prebuild | bare
-architecture: new           # new | old（如遇到兼容性问题才考虑 old）
-integration: greenfield     # greenfield | brownfield
+build_tool: expo_prebuild # expo_prebuild | bare
+architecture: new # new | old（如遇到兼容性问题才考虑 old）
+integration: greenfield # greenfield | brownfield
 
 state_management: zustand
 server_state: tanstack_query
 router: react_navigation
 
-styling_engine: nativewind  # nativewind | unistyles | restyle | stylesheet
-forms: rhf_zod              # rhf_zod | none
-permissions: unified         # unified | none
+styling_engine: nativewind # nativewind | unistyles | restyle | stylesheet
+forms: rhf_zod # rhf_zod | none
+permissions: unified # unified | none
 deep_linking: true
 app_scheme: myapp
 universal_links:
@@ -539,6 +548,7 @@ comet create app <app_name> \
 ```
 
 行为：
+
 - 默认（Expo Prebuild）：
   - 基于 `npx create-expo-app@latest` 初始化。
   - 生成/维护 `app.json` 或 `app.config.ts`，并在需要时执行 `npx expo prebuild --clean` 产出 `android/`、`ios/`。
@@ -560,6 +570,7 @@ comet create feature <feature_name> \
 ```
 
 约定：
+
 - 在 `src/features/<feature_name>/` 下生成：
 
 ```text
@@ -590,6 +601,7 @@ comet create service <service_name>
 ```
 
 用途：
+
 - 在 `src/core/` 下生成对应服务骨架，例如 `analytics`, `crash_reporting`, `remote_config` 等。
 - 脚手架可选择自动在 `app/di.ts`（或 providers 文件）中注册该服务，推荐通过 CLI 新增服务而不是手工修改“组合根”，由 CLI 保证一致性与完整性。
 
@@ -622,6 +634,7 @@ comet create service <service_name>
 - 测试文件：与被测文件同名 + `.test` 后缀，例如 `UserProfileScreen.test.tsx`、`useCounterStore.test.ts`。
 
 代码质量与风格：
+
 - ESLint 作为主入口，Prettier 负责格式化；避免规则冲突（例如使用 `eslint-config-prettier`）。
 - CI 与本地统一执行：lint、`tsc --noEmit`、Jest（以及可选的原生构建校验），保证风格一致与尽早发现问题。
 

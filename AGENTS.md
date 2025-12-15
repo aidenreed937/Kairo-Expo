@@ -28,11 +28,11 @@ pnpm test             # jest
 pnpm quality          # typecheck + lint + format:check + test
 ```
 
-### Build
+### Build & Diagnostics
 
 ```bash
 pnpm prebuild         # expo prebuild --clean（生成 android/ios）
-pnpm doctor           # npx expo doctor
+npx expo-doctor       # Expo SDK 兼容性检查
 ```
 
 ## 目录与依赖规则
@@ -77,3 +77,16 @@ mkdir -p src/features/<name>/{presentation/{screens,components,stores},domain/{e
 ```
 
 并在 `src/app/navigation/routes.ts` 与 `src/app/navigation/RootNavigator.tsx` 注册路由。
+
+## ESLint 配置
+
+- 使用 ESLint 9 flat config 格式（`eslint.config.mjs`）
+- TypeScript-ESLint 提供类型感知 linting
+- React 和 React Hooks 插件
+- Prettier 集成（`eslint-config-prettier`）
+
+## Jest 配置
+
+- 使用 `jest-expo` 预设
+- pnpm 兼容的 `transformIgnorePatterns`（处理 `.pnpm` 目录结构）
+- 覆盖率阈值：70%（branches, functions, lines, statements）

@@ -19,17 +19,17 @@ org: com.example
 
 package_manager: pnpm
 
-build_tool: expo_prebuild   # expo_prebuild | bare
-architecture: new           # new | old
-integration: greenfield     # greenfield | brownfield
+build_tool: expo_prebuild # expo_prebuild | bare
+architecture: new # new | old
+integration: greenfield # greenfield | brownfield
 
 state_management: zustand
 server_state: tanstack_query
 router: react_navigation
 
-styling_engine: nativewind  # nativewind | unistyles | restyle | stylesheet
-forms: rhf_zod              # rhf_zod | none
-permissions: unified        # unified | none
+styling_engine: nativewind # nativewind | unistyles | restyle | stylesheet
+forms: rhf_zod # rhf_zod | none
+permissions: unified # unified | none
 deep_linking: true
 app_scheme: myapp
 universal_links:
@@ -81,6 +81,7 @@ comet create app <app_name> \
 ```
 
 **行为**：
+
 - Expo Prebuild（默认）：基于 `npx create-expo-app@latest` 初始化
 - Bare RN（可选）：基于 `npx @react-native-community/cli init` 初始化
 - 生成标准目录结构（`src/app`、`src/core`、`src/features`）
@@ -113,6 +114,7 @@ src/features/<feature_name>/
 ```
 
 **选项**：
+
 - `--route`：自动在 Root Navigator 注册路由
 - `--no-domain`：不生成 domain 层
 - `--no-data`：不生成 data 层
@@ -127,13 +129,13 @@ comet create service <service_name>
 
 ### 辅助命令
 
-| 命令 | 说明 |
-|------|------|
-| `comet lint` | 运行 ESLint + TypeScript 检查 |
-| `comet format` | 运行 Prettier |
-| `comet test` | 运行 Jest（可选 Detox） |
-| `comet doctor` | 检查项目是否符合脚手架约定 |
-| `comet upgrade-core` | 统一升级核心依赖版本 |
+| 命令                 | 说明                          |
+| -------------------- | ----------------------------- |
+| `comet lint`         | 运行 ESLint + TypeScript 检查 |
+| `comet format`       | 运行 Prettier                 |
+| `comet test`         | 运行 Jest（可选 Detox）       |
+| `comet doctor`       | 检查项目是否符合脚手架约定    |
+| `comet upgrade-core` | 统一升级核心依赖版本          |
 
 ---
 
@@ -233,21 +235,21 @@ src/
 
 ## 技术选型（默认）
 
-| 类别 | 技术 |
-|------|------|
-| 构建工具 | Expo（Prebuild / CNG） |
-| 底层架构 | New Architecture |
-| 语言 | TypeScript（strict） |
-| 包管理 | pnpm |
-| 导航 | React Navigation 7 |
-| 状态管理 | Zustand + TanStack Query |
-| 样式 | NativeWind |
-| 表单 | React Hook Form + Zod |
-| 网络 | axios |
-| 存储 | AsyncStorage / MMKV |
-| 国际化 | i18next |
-| 监控 | Sentry |
-| 测试 | Jest + @testing-library/react-native |
+| 类别     | 技术                                 |
+| -------- | ------------------------------------ |
+| 构建工具 | Expo（Prebuild / CNG）               |
+| 底层架构 | New Architecture                     |
+| 语言     | TypeScript（strict）                 |
+| 包管理   | pnpm                                 |
+| 导航     | React Navigation 7                   |
+| 状态管理 | Zustand + TanStack Query             |
+| 样式     | NativeWind                           |
+| 表单     | React Hook Form + Zod                |
+| 网络     | axios                                |
+| 存储     | AsyncStorage / MMKV                  |
+| 国际化   | i18next                              |
+| 监控     | Sentry                               |
+| 测试     | Jest + @testing-library/react-native |
 
 ---
 
@@ -307,15 +309,15 @@ npx react-native run-ios
 
 以模板 `package.json` + lockfile 为准，以下仅供参考：
 
-| 包 | 版本 |
-|-----|------|
-| react | 19.2.3 |
-| react-native | 0.83.0 |
-| @react-navigation/native | 7.1.25 |
-| zustand | 5.0.9 |
-| @tanstack/react-query | 5.90.12 |
-| axios | 1.13.2 |
-| i18next | 25.7.2 |
-| @sentry/react-native | 7.7.0 |
+| 包                       | 版本    |
+| ------------------------ | ------- |
+| react                    | 19.2.3  |
+| react-native             | 0.83.0  |
+| @react-navigation/native | 7.1.25  |
+| zustand                  | 5.0.9   |
+| @tanstack/react-query    | 5.90.12 |
+| axios                    | 1.13.2  |
+| i18next                  | 25.7.2  |
+| @sentry/react-native     | 7.7.0   |
 
 定期运行 `npx expo doctor` 和 `pnpm outdated` 检查兼容性。

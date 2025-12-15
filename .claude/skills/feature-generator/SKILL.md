@@ -389,17 +389,17 @@ describe('<FeatureName>Screen', () => {
 
 ## 命名规范速查
 
-| 类型 | 命名格式 | 文件名 | 示例 |
-|------|----------|--------|------|
-| Feature 目录 | `kebab-case` | - | `user-profile/` |
-| Screen | `<FeatureName>Screen` | `<FeatureName>Screen.tsx` | `UserProfileScreen.tsx` |
-| View | `<FeatureName>View` | `<FeatureName>View.tsx` | `UserProfileView.tsx` |
-| Store | `use<FeatureName>Store` | `use<FeatureName>Store.ts` | `useUserProfileStore.ts` |
-| Query Hook | `use<FeatureName>Query` | `use<FeatureName>Query.ts` | `useUserProfileQuery.ts` |
-| Entity | `<FeatureName>` | `<featureName>.ts` | `userProfile.ts` |
-| Repository | `<FeatureName>Repository` | `<featureName>Repository.ts` | `userProfileRepository.ts` |
-| DataSource | `<FeatureName>RemoteDataSource` | `<FeatureName>RemoteDataSource.ts` | `UserProfileRemoteDataSource.ts` |
-| RepositoryImpl | `<FeatureName>RepositoryImpl` | `<FeatureName>RepositoryImpl.ts` | `UserProfileRepositoryImpl.ts` |
+| 类型           | 命名格式                        | 文件名                             | 示例                             |
+| -------------- | ------------------------------- | ---------------------------------- | -------------------------------- |
+| Feature 目录   | `kebab-case`                    | -                                  | `user-profile/`                  |
+| Screen         | `<FeatureName>Screen`           | `<FeatureName>Screen.tsx`          | `UserProfileScreen.tsx`          |
+| View           | `<FeatureName>View`             | `<FeatureName>View.tsx`            | `UserProfileView.tsx`            |
+| Store          | `use<FeatureName>Store`         | `use<FeatureName>Store.ts`         | `useUserProfileStore.ts`         |
+| Query Hook     | `use<FeatureName>Query`         | `use<FeatureName>Query.ts`         | `useUserProfileQuery.ts`         |
+| Entity         | `<FeatureName>`                 | `<featureName>.ts`                 | `userProfile.ts`                 |
+| Repository     | `<FeatureName>Repository`       | `<featureName>Repository.ts`       | `userProfileRepository.ts`       |
+| DataSource     | `<FeatureName>RemoteDataSource` | `<FeatureName>RemoteDataSource.ts` | `UserProfileRemoteDataSource.ts` |
+| RepositoryImpl | `<FeatureName>RepositoryImpl`   | `<FeatureName>RepositoryImpl.ts`   | `UserProfileRepositoryImpl.ts`   |
 
 ---
 
@@ -417,11 +417,11 @@ presentation ──► domain ◄── data
               (无 RN 依赖)
 ```
 
-| 层级 | 可依赖 | 禁止依赖 |
-|------|--------|----------|
-| `presentation/` | `domain/`、`core/`、React/RN | 其他 feature 的 store/组件 |
-| `domain/` | 纯 TypeScript 类型 | `react-native`、UI 包、`data/` |
-| `data/` | `domain/` 接口、`core/network` | `presentation/` |
+| 层级            | 可依赖                         | 禁止依赖                       |
+| --------------- | ------------------------------ | ------------------------------ |
+| `presentation/` | `domain/`、`core/`、React/RN   | 其他 feature 的 store/组件     |
+| `domain/`       | 纯 TypeScript 类型             | `react-native`、UI 包、`data/` |
+| `data/`         | `domain/` 接口、`core/network` | `presentation/`                |
 
 ---
 
@@ -434,7 +434,7 @@ Task({
   subagent_type: 'general-purpose',
   description: '创建 user-profile feature',
   prompt: `按照 .claude/skills/feature-generator/SKILL.md 创建完整的 user-profile feature，包含三层架构`,
-})
+});
 ```
 
 ---

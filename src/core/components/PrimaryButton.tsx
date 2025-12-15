@@ -28,7 +28,10 @@ export function PrimaryButton({
   const isDisabled = disabled || loading;
 
   const getButtonStyle = (): ViewStyle[] => {
-    const baseStyle: ViewStyle[] = [styles.button, styles[`button_${size}` as keyof typeof styles] as ViewStyle];
+    const baseStyle: ViewStyle[] = [
+      styles.button,
+      styles[`button_${size}` as keyof typeof styles] as ViewStyle,
+    ];
 
     if (variant === 'primary') {
       baseStyle.push(styles.button_primary);
@@ -46,7 +49,10 @@ export function PrimaryButton({
   };
 
   const getTextStyle = (): TextStyle[] => {
-    const baseStyle: TextStyle[] = [styles.text, styles[`text_${size}` as keyof typeof styles] as TextStyle];
+    const baseStyle: TextStyle[] = [
+      styles.text,
+      styles[`text_${size}` as keyof typeof styles] as TextStyle,
+    ];
 
     if (variant === 'outline') {
       baseStyle.push(styles.text_outline);
@@ -68,10 +74,7 @@ export function PrimaryButton({
       {...props}
     >
       {loading ? (
-        <ActivityIndicator
-          color={variant === 'outline' ? '#2563eb' : '#ffffff'}
-          size="small"
-        />
+        <ActivityIndicator color={variant === 'outline' ? '#2563eb' : '#ffffff'} size="small" />
       ) : (
         <Text style={getTextStyle()}>{title}</Text>
       )}

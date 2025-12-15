@@ -11,12 +11,12 @@ description: React Native (Expo) 项目的 Git 和 GitHub 操作，包括分支�
 
 ### 核心原则
 
-| 原则 | 说明 |
-|------|------|
-| **禁止直接 push main** | main 只能通过 PR 合并 |
-| **先 rebase 后 PR** | 提交前必须 rebase 到最新远程分支 |
-| **使用 rebase merge** | PR 合并统一使用 `--rebase` 保持线性历史 |
-| **提交前必须通过质量检查** | 参考 `code-quality` skill |
+| 原则                       | 说明                                    |
+| -------------------------- | --------------------------------------- |
+| **禁止直接 push main**     | main 只能通过 PR 合并                   |
+| **先 rebase 后 PR**        | 提交前必须 rebase 到最新远程分支        |
+| **使用 rebase merge**      | PR 合并统一使用 `--rebase` 保持线性历史 |
+| **提交前必须通过质量检查** | 参考 `code-quality` skill               |
 
 ### ⚠️ 提交前必须通过质量检查
 
@@ -33,12 +33,12 @@ pnpm jest                   # All tests passed
 
 ### 分支命名
 
-| 前缀 | 用途 | 示例 |
-|------|------|------|
-| `feature/` | 新功能 | `feature/user-auth` |
-| `fix/` | Bug 修复 | `fix/login-bug` |
-| `hotfix/` | 紧急修复 | `hotfix/critical-bug` |
-| `refactor/` | 重构 | `refactor/auth-module` |
+| 前缀        | 用途     | 示例                   |
+| ----------- | -------- | ---------------------- |
+| `feature/`  | 新功能   | `feature/user-auth`    |
+| `fix/`      | Bug 修复 | `fix/login-bug`        |
+| `hotfix/`   | 紧急修复 | `hotfix/critical-bug`  |
+| `refactor/` | 重构     | `refactor/auth-module` |
 
 ### 提交格式（Conventional Commits）
 
@@ -78,7 +78,7 @@ Task({
   subagent_type: 'general-purpose',
   description: '提交当前分支变更',
   prompt: `执行 Git 提交，遵循 .claude/skills/git-github/SKILL.md`,
-})
+});
 ```
 
 **原因**：Git 操作需读取 diff/status/log（消耗大量 token），子代理可隔离处理。
@@ -168,10 +168,12 @@ git checkout develop && git merge main && git push
 
 ```markdown
 ## Summary
+
 - 变更点 1
 - 变更点 2
 
 ## Test plan
+
 - [ ] 验证项 1
 - [ ] 验证项 2
 
@@ -182,13 +184,13 @@ git checkout develop && git merge main && git push
 
 ## 冲突解决
 
-| 文件类型 | 策略 |
-|----------|------|
-| `package.json` | 保留较新版本，重新 `pnpm install` |
-| `pnpm-lock.yaml` | 选择一方后重新 `pnpm install` |
-| `app.json/app.config.ts` | 优先保留 main 结构 |
-| 代码文件 | 根据业务逻辑手动合并 |
-| `ios/` / `android/` | 谨慎处理，可能需要 `npx expo prebuild --clean` |
+| 文件类型                 | 策略                                           |
+| ------------------------ | ---------------------------------------------- |
+| `package.json`           | 保留较新版本，重新 `pnpm install`              |
+| `pnpm-lock.yaml`         | 选择一方后重新 `pnpm install`                  |
+| `app.json/app.config.ts` | 优先保留 main 结构                             |
+| 代码文件                 | 根据业务逻辑手动合并                           |
+| `ios/` / `android/`      | 谨慎处理，可能需要 `npx expo prebuild --clean` |
 
 ---
 
@@ -242,13 +244,13 @@ coverage/
 
 ## 安全提醒
 
-| 禁止 | 替代方案 |
-|------|----------|
-| 直接 push main | 通过 PR 合并 |
-| 合并未通过检测的代码 | 先 `pnpm tsc --noEmit && pnpm eslint . && pnpm jest` |
-| `--force` 推送 main | 使用 `--force-with-lease`（仅 feature 分支） |
-| 提交 `.env` 等敏感信息 | 使用 `.gitignore` 排除 |
-| 提交 API Keys/Secrets | 使用环境变量 |
+| 禁止                   | 替代方案                                             |
+| ---------------------- | ---------------------------------------------------- |
+| 直接 push main         | 通过 PR 合并                                         |
+| 合并未通过检测的代码   | 先 `pnpm tsc --noEmit && pnpm eslint . && pnpm jest` |
+| `--force` 推送 main    | 使用 `--force-with-lease`（仅 feature 分支）         |
+| 提交 `.env` 等敏感信息 | 使用 `.gitignore` 排除                               |
+| 提交 API Keys/Secrets  | 使用环境变量                                         |
 
 ---
 

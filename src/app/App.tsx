@@ -32,12 +32,8 @@ const App: React.FC = () => {
     return (
       <SafeAreaProvider>
         <View className="flex-1 items-center justify-center bg-red-50 p-4">
-          <Text className="text-red-600 text-lg font-bold mb-2">
-            Failed to initialize app
-          </Text>
-          <Text className="text-red-500 text-center">
-            {error.message}
-          </Text>
+          <Text className="text-red-600 text-lg font-bold mb-2">Failed to initialize app</Text>
+          <Text className="text-red-500 text-center">{error.message}</Text>
         </View>
       </SafeAreaProvider>
     );

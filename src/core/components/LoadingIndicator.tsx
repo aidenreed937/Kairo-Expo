@@ -17,9 +17,7 @@ export function LoadingIndicator({
   const content = (
     <View style={styles.container}>
       <ActivityIndicator size={size} color={color} />
-      {message !== undefined && (
-        <Text style={styles.message}>{message}</Text>
-      )}
+      {message !== undefined && <Text style={styles.message}>{message}</Text>}
     </View>
   );
 

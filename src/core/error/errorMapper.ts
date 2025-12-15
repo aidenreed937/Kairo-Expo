@@ -55,11 +55,15 @@ export function mapAxiosError(error: AxiosError): AppError {
     case 502:
     case 503:
     case 504:
-      return new AppError(message || 'Server error. Please try again later.', ErrorCode.SERVER_ERROR, {
-        statusCode: status,
-        data,
-        originalError: error,
-      });
+      return new AppError(
+        message || 'Server error. Please try again later.',
+        ErrorCode.SERVER_ERROR,
+        {
+          statusCode: status,
+          data,
+          originalError: error,
+        }
+      );
 
     default:
       return new AppError(message, ErrorCode.UNKNOWN, {

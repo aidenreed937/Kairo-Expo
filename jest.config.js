@@ -1,9 +1,8 @@
 module.exports = {
   preset: 'jest-expo',
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
+  // pnpm-compatible transformIgnorePatterns
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)',
+    '<rootDir>/node_modules/(?!(?:.pnpm/)?(?:react-native|@react-native|expo|@expo|react-navigation|@react-navigation|@sentry))',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
@@ -20,7 +19,7 @@ module.exports = {
     '!src/**/*.spec.{ts,tsx}',
     '!src/**/index.{ts,tsx}',
   ],
-  coverageThresholds: {
+  coverageThreshold: {
     global: {
       branches: 70,
       functions: 70,

@@ -11,14 +11,14 @@ description: React Native (Expo) 项目代码质量检测和修复，包括 Type
 
 ### 核心命令
 
-| 检测项 | 命令 | 说明 |
-|--------|------|------|
-| 类型检查 | `pnpm tsc --noEmit` | TypeScript 编译检查 |
-| 代码分析 | `pnpm eslint .` | ESLint 语法/规范检查 |
-| 格式化 | `pnpm prettier --check .` | 代码格式检查 |
-| 测试 | `pnpm jest` | 运行 Jest 单元测试 |
-| 依赖检查 | `pnpm outdated` | 检查过期依赖 |
-| Expo 诊断 | `npx expo doctor` | Expo SDK 兼容性检查 |
+| 检测项    | 命令                      | 说明                 |
+| --------- | ------------------------- | -------------------- |
+| 类型检查  | `pnpm tsc --noEmit`       | TypeScript 编译检查  |
+| 代码分析  | `pnpm eslint .`           | ESLint 语法/规范检查 |
+| 格式化    | `pnpm prettier --check .` | 代码格式检查         |
+| 测试      | `pnpm jest`               | 运行 Jest 单元测试   |
+| 依赖检查  | `pnpm outdated`           | 检查过期依赖         |
+| Expo 诊断 | `npx expo doctor`         | Expo SDK 兼容性检查  |
 
 ### 完整质量检查（一键运行）
 
@@ -55,7 +55,7 @@ Task({
   subagent_type: 'general-purpose',
   description: '运行 RN 代码质量检查',
   prompt: `运行完整代码质量检查并修复问题，遵循 .claude/skills/code-quality/SKILL.md`,
-})
+});
 ```
 
 **原因**：质量检查失败时可能产生大量输出（10k-20k tokens），子代理可隔离处理。
@@ -79,11 +79,11 @@ src/
 
 ### 分层检查
 
-| 层级 | 允许依赖 | 禁止依赖 |
-|------|----------|----------|
-| `domain/` | 纯 TypeScript | `react-native`、UI 相关包 |
+| 层级            | 允许依赖                         | 禁止依赖                   |
+| --------------- | -------------------------------- | -------------------------- |
+| `domain/`       | 纯 TypeScript                    | `react-native`、UI 相关包  |
 | `presentation/` | `core/`、本 feature 的 `domain/` | 其他 feature 的 store/组件 |
-| `data/` | `domain/` 接口 | `presentation/` |
+| `data/`         | `domain/` 接口                   | `presentation/`            |
 
 ---
 
@@ -91,32 +91,32 @@ src/
 
 ### 敏感信息
 
-| 禁止 | 允许 |
-|------|------|
+| 禁止                 | 允许                                  |
+| -------------------- | ------------------------------------- |
 | 硬编码 API Key/Token | 环境变量 (`app.config.ts` / `.env.*`) |
-| 硬编码密码 | SecureStorage / Keychain |
-| 内部 URL/IP | `core/config/env.ts` 统一管理 |
+| 硬编码密码           | SecureStorage / Keychain              |
+| 内部 URL/IP          | `core/config/env.ts` 统一管理         |
 
 ### 常见漏洞
 
-| 漏洞 | 预防 |
-|------|------|
-| 数据泄露 | 移除 `console.log` 敏感日志 |
+| 漏洞     | 预防                         |
+| -------- | ---------------------------- |
+| 数据泄露 | 移除 `console.log` 敏感日志  |
 | 本地存储 | 敏感数据使用 `secureStorage` |
-| 网络请求 | 强制 HTTPS |
-| XSS/注入 | 验证用户输入 |
+| 网络请求 | 强制 HTTPS                   |
+| XSS/注入 | 验证用户输入                 |
 
 ---
 
 ## 性能检查
 
-| 检查项 | 标准 |
-|--------|------|
-| 单文件行数 | < 500 行 |
-| 组件嵌套 | < 10 层 |
-| 列表渲染 | 使用 `FlatList` / `FlashList` |
+| 检查项     | 标准                                        |
+| ---------- | ------------------------------------------- |
+| 单文件行数 | < 500 行                                    |
+| 组件嵌套   | < 10 层                                     |
+| 列表渲染   | 使用 `FlatList` / `FlashList`               |
 | 避免重渲染 | 使用 `React.memo`、`useMemo`、`useCallback` |
-| 图片优化 | 使用缓存策略 |
+| 图片优化   | 使用缓存策略                                |
 
 ---
 
@@ -124,16 +124,16 @@ src/
 
 根据设计文档约定：
 
-| 类型 | 命名格式 | 示例 |
-|------|----------|------|
-| 目录 | `kebab-case` | `user-profile/` |
-| React 组件文件 | `PascalCase.tsx` | `UserProfileScreen.tsx` |
-| 非组件模块 | `camelCase.ts` | `httpClient.ts` |
-| Hooks | `useXxx.ts` | `useCounterStore.ts` |
-| Store | `use<Name>Store` | `useCounterStore` |
-| Service | `<Name>Service` | `AuthService` |
-| Repository | `<Name>Repository` | `counterRepository.ts` |
-| 测试文件 | `*.test.ts(x)` | `UserProfileScreen.test.tsx` |
+| 类型           | 命名格式           | 示例                         |
+| -------------- | ------------------ | ---------------------------- |
+| 目录           | `kebab-case`       | `user-profile/`              |
+| React 组件文件 | `PascalCase.tsx`   | `UserProfileScreen.tsx`      |
+| 非组件模块     | `camelCase.ts`     | `httpClient.ts`              |
+| Hooks          | `useXxx.ts`        | `useCounterStore.ts`         |
+| Store          | `use<Name>Store`   | `useCounterStore`            |
+| Service        | `<Name>Service`    | `AuthService`                |
+| Repository     | `<Name>Repository` | `counterRepository.ts`       |
+| 测试文件       | `*.test.ts(x)`     | `UserProfileScreen.test.tsx` |
 
 ---
 
@@ -141,17 +141,17 @@ src/
 
 ### 命名约定
 
-| 类型 | 命名 | 用途 |
-|------|------|------|
-| `useXxxQuery` | TanStack Query | 服务端状态（请求缓存） |
-| `useXxxMutation` | TanStack Query | 服务端状态变更 |
-| `useXxxStore` | Zustand | 客户端本地状态 |
+| 类型             | 命名           | 用途                   |
+| ---------------- | -------------- | ---------------------- |
+| `useXxxQuery`    | TanStack Query | 服务端状态（请求缓存） |
+| `useXxxMutation` | TanStack Query | 服务端状态变更         |
+| `useXxxStore`    | Zustand        | 客户端本地状态         |
 
 ### Zustand Store 示例
 
 ```ts
 // features/counter/presentation/stores/useCounterStore.ts
-import {create} from 'zustand';
+import { create } from 'zustand';
 
 type CounterState = {
   value: number;
@@ -161,8 +161,8 @@ type CounterState = {
 
 export const useCounterStore = create<CounterState>((set) => ({
   value: 0,
-  inc: () => set((s) => ({value: s.value + 1})),
-  dec: () => set((s) => ({value: s.value - 1})),
+  inc: () => set((s) => ({ value: s.value + 1 })),
+  dec: () => set((s) => ({ value: s.value - 1 })),
 }));
 ```
 
@@ -172,7 +172,7 @@ export const useCounterStore = create<CounterState>((set) => ({
 
 ```tsx
 // ❌ 未使用的导入
-import {unused} from 'some-package';
+import { unused } from 'some-package';
 
 // ✅ 移除未使用导入
 ```
@@ -202,6 +202,7 @@ const handlePress = (data: UserData) => { ... }
 配置文件：`.eslintrc.js` 或 `eslint.config.js`
 
 推荐规则集：
+
 - `@typescript-eslint/recommended`
 - `react-hooks/recommended`
 - `prettier` (避免冲突)
@@ -211,6 +212,7 @@ const handlePress = (data: UserData) => { ... }
 配置文件：`tsconfig.json`
 
 推荐开启：
+
 - `strict: true`
 - `noImplicitAny: true`
 - `strictNullChecks: true`

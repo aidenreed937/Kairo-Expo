@@ -4,18 +4,18 @@ React Native scaffold project built with Expo SDK 52, featuring a feature-first 
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | Expo 52 + React Native 0.76 + React 18 |
-| Language | TypeScript |
-| Navigation | React Navigation 7 |
-| State | Zustand (client) + TanStack Query (server) |
-| Styling | NativeWind (Tailwind CSS) |
-| Forms | React Hook Form + Zod |
-| Network | Axios |
-| Storage | MMKV |
-| i18n | i18next |
-| Monitoring | Sentry |
+| Category   | Technology                                 |
+| ---------- | ------------------------------------------ |
+| Framework  | Expo 52 + React Native 0.76 + React 18     |
+| Language   | TypeScript                                 |
+| Navigation | React Navigation 7                         |
+| State      | Zustand (client) + TanStack Query (server) |
+| Styling    | NativeWind (Tailwind CSS)                  |
+| Forms      | React Hook Form + Zod                      |
+| Network    | Axios                                      |
+| Storage    | MMKV                                       |
+| i18n       | i18next                                    |
+| Monitoring | Sentry                                     |
 
 ## Getting Started
 

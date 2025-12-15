@@ -89,7 +89,11 @@ class HttpClient {
   /**
    * POST request
    */
-  async post<T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<Result<T, AppError>> {
+  async post<T, D = any>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig
+  ): Promise<Result<T, AppError>> {
     try {
       const response: AxiosResponse<T> = await this.instance.post(url, data, config);
       return ok(response.data);
@@ -101,7 +105,11 @@ class HttpClient {
   /**
    * PUT request
    */
-  async put<T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<Result<T, AppError>> {
+  async put<T, D = any>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig
+  ): Promise<Result<T, AppError>> {
     try {
       const response: AxiosResponse<T> = await this.instance.put(url, data, config);
       return ok(response.data);
@@ -113,7 +121,11 @@ class HttpClient {
   /**
    * PATCH request
    */
-  async patch<T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<Result<T, AppError>> {
+  async patch<T, D = any>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig
+  ): Promise<Result<T, AppError>> {
     try {
       const response: AxiosResponse<T> = await this.instance.patch(url, data, config);
       return ok(response.data);

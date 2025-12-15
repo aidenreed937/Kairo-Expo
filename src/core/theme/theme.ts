@@ -1,12 +1,5 @@
 import { useColorScheme } from 'react-native';
-import {
-  colors,
-  spacing,
-  fontSize,
-  fontWeight,
-  borderRadius,
-  shadows,
-} from './tokens';
+import { colors, spacing, fontSize, fontWeight, borderRadius, shadows } from './tokens';
 
 export type ThemeMode = 'light' | 'dark';
 
