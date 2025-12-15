@@ -1,0 +1,41 @@
+name: kairo_expo
+org: com.example.kairo
+
+package_manager: pnpm
+
+build_tool: expo_prebuild
+architecture: new
+integration: greenfield
+
+state_management: zustand
+server_state: tanstack_query
+router: react_navigation
+
+styling_engine: nativewind
+forms: rhf_zod
+permissions: unified
+deep_linking: true
+app_scheme: kairo
+universal_links: []
+
+envs:
+  - name: development
+    android_flavor: dev
+    ios_scheme: KairoExpo-Dev
+    env_file: .env.development
+  - name: staging
+    android_flavor: stg
+    ios_scheme: KairoExpo-Stg
+    env_file: .env.staging
+  - name: production
+    android_flavor: prod
+    ios_scheme: KairoExpo
+    env_file: .env.production
+
+modules:
+  network: true
+  storage: true
+  i18n: true
+  sentry: true
+  svg: true
+  e2e: false

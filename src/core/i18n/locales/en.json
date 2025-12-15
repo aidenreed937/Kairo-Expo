@@ -1,0 +1,62 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "close": "Close",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "loadMore": "Load More",
+    "noData": "No Data",
+    "comingSoon": "Coming Soon"
+  },
+  "errors": {
+    "networkError": "Network error. Please check your connection.",
+    "timeout": "Request timeout. Please try again.",
+    "serverError": "Server error. Please try again later.",
+    "unauthorized": "Unauthorized. Please login.",
+    "forbidden": "Access forbidden.",
+    "notFound": "Resource not found.",
+    "validationError": "Validation error. Please check your input.",
+    "unknown": "An unexpected error occurred."
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "password": "Password must be at least 8 characters",
+    "passwordMatch": "Passwords do not match",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must be at most {{max}} characters",
+    "min": "Must be at least {{min}}",
+    "max": "Must be at most {{max}}"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "rememberMe": "Remember Me",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out"
+  }
+}

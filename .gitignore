@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Expo
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# Native
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+android/
+ios/
+
+# Metro
+.metro-health-check*
+
+# Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+
+# OS
+.DS_Store
+*.pem
+Thumbs.db
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+coverage/
+*.lcov
+
+# Temporary
+*.tmp
+*.cache
+.temp/
+
+# pnpm
+.pnpm-store/
+
+# Test builds
+dist-bundle-test/
