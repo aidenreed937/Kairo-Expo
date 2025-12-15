@@ -31,7 +31,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     favicon: './assets/favicon.png',
     bundler: 'metro',
   },
-  plugins: ['expo-localization'],
+  plugins: ['expo-localization', './plugins/withWorkletsPickFirst'],
   extra: {
     eas: {
       projectId: 'your-project-id',
