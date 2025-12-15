@@ -159,3 +159,57 @@ plugins: [['module-resolver', { ... }]]
 // ❌ Wrong - passing plugins option to preset
 presets: [['nativewind/babel', { plugins: [...] }]]
 ```
+
+## Troubleshooting Common Plugin Errors
+
+### 1. "Cannot find module 'xxx/plugin'" in Jest/CI
+
+**Symptoms**: Tests pass locally but fail in CI with errors like `Cannot find module 'react-native-worklets/plugin'`
+
+**Causes**:
+
+- Dependency resolution differs between local and CI environments
+- pnpm store caching includes transitive dependencies not in lockfile
+- Native module plugins have different resolution in test environment
+
+**Solutions**:
+
+1. Add a Jest mock for the missing module:
+   ```bash
+   mkdir -p __mocks__/<package-name>
+   echo "module.exports = function () { return {}; };" > __mocks__/<package-name>/plugin.js
+   ```
+2. Add to `jest.config.js` moduleNameMapper:
+   ```javascript
+   moduleNameMapper: {
+     '<package-name>/plugin': '<rootDir>/__mocks__/<package-name>/plugin.js',
+   }
+   ```
+3. If it's a real dependency, install it: `pnpm add <package-name>`
+
+### 2. ".plugins is not a valid Plugin property"
+
+**Cause**: Passing unsupported options to a Babel preset (see Babel Configuration above)
+
+**Solution**: Ensure presets are simple strings, not arrays with options
+
+### 3. Jest transformIgnorePatterns for pnpm
+
+**Issue**: pnpm uses `.pnpm/package@version/node_modules/package` structure
+
+**Solution**: Use pattern that handles both regular and pnpm paths:
+
+```javascript
+transformIgnorePatterns: [
+  '<rootDir>/node_modules/(?!(?:.pnpm/)?(?:react-native|@react-native|expo|...))',
+];
+```
+
+### 4. General Plugin Debugging Steps
+
+1. **Check local vs CI difference**: Compare node_modules structure
+2. **Verify lockfile**: Ensure `pnpm-lock.yaml` is committed and up-to-date
+3. **Clear caches**: `pnpm store prune && rm -rf node_modules && pnpm install`
+4. **Check transitive dependencies**: `pnpm why <package-name>`
+5. **Review babel.config.js**: Ensure correct preset/plugin order
+6. **Add mocks for test-only issues**: Use `__mocks__/` directory for Jest

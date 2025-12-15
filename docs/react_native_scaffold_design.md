@@ -654,7 +654,68 @@ comet create service <service_name>
 - E2E 与发布质量：
   - 若项目对核心流程稳定性要求高，建议逐步引入 Detox 覆盖关键路径，并在 nightly 或 release 分支运行，平衡成本与收益。
 
-## 12. 后续扩展与演进方向
+## 12. 常见问题与排查指南
+
+### 12.1 Babel/Jest 插件相关错误
+
+#### "Cannot find module 'xxx/plugin'" 错误
+
+**现象**：本地测试通过，但 CI 环境中报错如 `Cannot find module 'react-native-worklets/plugin'`
+
+**原因分析**：
+
+- pnpm 的依赖解析在 CI 与本地环境可能存在差异
+- pnpm store 可能缓存了一些未在 lockfile 中声明的传递依赖
+- 某些原生模块的 Babel 插件在测试环境中有不同的解析行为
+
+**解决方案**：
+
+1. 在 `__mocks__/` 目录下创建对应的 mock 文件
+2. 在 `jest.config.js` 的 `moduleNameMapper` 中配置映射
+3. 如果确实需要该依赖，直接安装：`pnpm add <package-name>`
+
+```javascript
+// jest.config.js
+moduleNameMapper: {
+  '<package-name>/plugin': '<rootDir>/__mocks__/<package-name>/plugin.js',
+}
+```
+
+#### ".plugins is not a valid Plugin property" 错误
+
+**原因**：向 Babel preset 传递了不支持的配置选项
+
+**解决方案**：确保 presets 配置为简单字符串，不要传递额外选项
+
+```javascript
+// ✅ 正确
+presets: ['nativewind/babel', 'babel-preset-expo'],
+
+// ❌ 错误
+presets: [['nativewind/babel', { plugins: [...] }]]
+```
+
+### 12.2 pnpm 环境下的 Jest 配置
+
+pnpm 使用 `.pnpm/package@version/node_modules/package` 的目录结构，需要特殊的 `transformIgnorePatterns` 配置：
+
+```javascript
+// jest.config.js
+transformIgnorePatterns: [
+  '<rootDir>/node_modules/(?!(?:.pnpm/)?(?:react-native|@react-native|expo|@expo|...))',
+];
+```
+
+### 12.3 通用排查步骤
+
+1. **对比本地与 CI 环境差异**：检查 node_modules 结构、依赖版本
+2. **验证 lockfile**：确保 `pnpm-lock.yaml` 已提交且最新
+3. **清理缓存重装**：`pnpm store prune && rm -rf node_modules && pnpm install`
+4. **检查传递依赖**：`pnpm why <package-name>` 追溯依赖来源
+5. **审查 babel.config.js**：确认 preset/plugin 顺序正确
+6. **添加 mock**：对于仅测试环境的问题，使用 `__mocks__/` 目录
+
+## 13. 后续扩展与演进方向
 
 - 支持多种初始化路径模板（React Native CLI / Expo），通过 `comet.yaml` 选择。
 - 支持多种状态管理模板（zustand/redux），并内置更贴近团队的最佳实践模板（如 server-state 与 cache 策略）。
