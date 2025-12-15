@@ -50,31 +50,196 @@ jobs:
           files: ./coverage/lcov.info
           fail_ci_if_error: false
 
-  # Build jobs are disabled for scaffold project
-  # Uncomment and configure when ready for production deployment
-  #
-  # Known issues to resolve before enabling:
-  # - iOS: react-native-worklets version compatibility with RN 0.76.9
-  # - Android: gradle cache needs files from expo prebuild
-  # - Web: requires react-native-web and @expo/metro-runtime
+  build_android:
+    name: Build (Android Debug APK)
+    runs-on: ubuntu-latest
+    needs: [quality]
+    if: github.event_name == 'push'
 
-  # build_android:
-  #   name: Build (Android Debug APK)
-  #   runs-on: ubuntu-latest
-  #   needs: [quality]
-  #   if: github.event_name == 'push'
-  #   ...
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  # build_ios:
-  #   name: Build (iOS Simulator Debug App)
-  #   runs-on: macos-latest
-  #   needs: [quality]
-  #   if: github.event_name == 'push'
-  #   ...
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-  # build_web:
-  #   name: Build (Web Export)
-  #   runs-on: ubuntu-latest
-  #   needs: [quality]
-  #   if: github.event_name == 'push'
-  #   ...
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Cache Expo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.expo
+            ~/.cache/expo
+          key: expo-${{ runner.os }}-${{ hashFiles('package.json', 'pnpm-lock.yaml', 'app.config.*', 'babel.config.js') }}
+          restore-keys: |
+            expo-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prebuild (Android)
+        env:
+          NODE_ENV: development
+        run: pnpm exec expo prebuild --no-install -p android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build dependencies
+        run: |
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;26.1.10909125"
+          yes | sdkmanager --licenses
+
+      - name: Assemble Debug APK
+        env:
+          NODE_ENV: development
+        run: |
+          cd android
+          ./gradlew assembleDebug --build-cache --stacktrace --no-daemon
+
+      - name: Upload Android Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          if-no-files-found: error
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+
+  build_ios:
+    name: Build (iOS Simulator Debug App)
+    runs-on: macos-latest
+    needs: [quality]
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Cache Expo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.expo
+            ~/.cache/expo
+          key: expo-${{ runner.os }}-${{ hashFiles('package.json', 'pnpm-lock.yaml', 'app.config.*', 'babel.config.js') }}
+          restore-keys: |
+            expo-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prebuild (iOS)
+        env:
+          NODE_ENV: development
+        run: pnpm exec expo prebuild --no-install -p ios
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: |
+            ios/Pods
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods
+          key: pods-${{ runner.os }}-${{ hashFiles('ios/Podfile', 'ios/Podfile.properties.json', 'pnpm-lock.yaml') }}
+          restore-keys: |
+            pods-${{ runner.os }}-
+
+      - name: Install Pods
+        env:
+          NODE_ENV: development
+        run: |
+          cd ios
+          pod --version
+          pod install
+
+      - name: Build iOS (Simulator)
+        env:
+          NODE_ENV: development
+        run: |
+          xcodebuild \
+            -workspace ios/KairoExpo.xcworkspace \
+            -scheme KairoExpo \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,name=iPhone 15" \
+            -derivedDataPath ios/build/DerivedData \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            build
+
+      - name: Package iOS Simulator App
+        run: |
+          mkdir -p ios/build
+          ditto -c -k --sequesterRsrc --keepParent \
+            ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KairoExpo.app \
+            ios/build/KairoExpo-iphonesimulator-Debug.app.zip
+
+      - name: Upload iOS Simulator App
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-iphonesimulator-debug-app
+          if-no-files-found: error
+          path: ios/build/KairoExpo-iphonesimulator-Debug.app.zip
+
+  build_web:
+    name: Build (Web Export)
+    runs-on: ubuntu-latest
+    needs: [quality]
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Cache Expo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.expo
+            ~/.cache/expo
+          key: expo-${{ runner.os }}-${{ hashFiles('package.json', 'pnpm-lock.yaml', 'app.config.*', 'babel.config.js') }}
+          restore-keys: |
+            expo-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Export Web
+        env:
+          NODE_ENV: production
+        run: pnpm exec expo export --platform web --output-dir dist
+
+      - name: Upload Web Export
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          if-no-files-found: error
+          path: dist
