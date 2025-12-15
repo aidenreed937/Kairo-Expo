@@ -5,6 +5,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: 'Kairo Expo',
   slug: 'kairo-expo',
   version: '1.0.0',
+  newArchEnabled: true,
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
