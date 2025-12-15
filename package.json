@@ -93,6 +93,9 @@
     ],
     "*.{json,md,yml,yaml}": [
       "prettier --write"
+    ],
+    "pnpm-lock.yaml": [
+      "prettier --write"
     ]
   },
   "packageManager": "pnpm@9.15.0",
