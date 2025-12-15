@@ -90,3 +90,20 @@ mkdir -p src/features/<name>/{presentation/{screens,components,stores},domain/{e
 - 使用 `jest-expo` 预设
 - pnpm 兼容的 `transformIgnorePatterns`（处理 `.pnpm` 目录结构）
 - 覆盖率阈值：70%（branches, functions, lines, statements）
+
+## Babel 配置
+
+`babel.config.js` 注意事项：
+
+- **预设顺序**：`nativewind/babel` 必须在 `babel-preset-expo` **之前**
+- **不要传递不支持的选项**：预设应为简单字符串
+- 错误 `.plugins is not a valid Plugin property` 表示预设接收了不支持的选项
+
+```javascript
+// ✅ 正确
+presets: ['nativewind/babel', 'babel-preset-expo'],
+plugins: [['module-resolver', { ... }]]
+
+// ❌ 错误
+presets: [['nativewind/babel', { plugins: [...] }]]
+```

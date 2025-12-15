@@ -142,3 +142,20 @@ See `.claude/skills/feature-generator/SKILL.md` for detailed templates.
 - TypeScript-ESLint for type-aware linting
 - React and React Hooks plugins
 - Prettier integration via `eslint-config-prettier`
+
+## Babel Configuration
+
+Important notes for `babel.config.js`:
+
+- **Preset order matters**: `nativewind/babel` must come BEFORE `babel-preset-expo`
+- **Don't pass unsupported options**: Presets should be simple strings, not `['preset', { plugins: [...] }]`
+- Common error `.plugins is not a valid Plugin property` means a preset received unsupported options
+
+```javascript
+// ✅ Correct
+presets: ['nativewind/babel', 'babel-preset-expo'],
+plugins: [['module-resolver', { ... }]]
+
+// ❌ Wrong - passing plugins option to preset
+presets: [['nativewind/babel', { plugins: [...] }]]
+```

@@ -48,6 +48,10 @@
 - 国际化：`i18next` + `react-i18next`（或 FormatJS，按需替换）。
 - 监控与错误上报：Sentry（或其他平台，脚手架只依赖抽象接口）。
 - 代码规范：ESLint 9（flat config） + Prettier + TypeScript（`tsc --noEmit`）。
+- Babel 配置：
+  - 预设顺序：`nativewind/babel` 必须在 `babel-preset-expo` **之前**
+  - 不要给预设传递不支持的选项（如 `{ plugins: [...] }`）
+  - 错误 `.plugins is not a valid Plugin property` 表示预设配置格式错误
 - 测试：
   - 单元/组件：Jest + `@testing-library/react-native`
   - pnpm 兼容：需配置 `transformIgnorePatterns` 处理 `.pnpm` 目录结构
