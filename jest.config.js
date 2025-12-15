@@ -1,8 +1,9 @@
 module.exports = {
   preset: 'jest-expo',
   // pnpm-compatible transformIgnorePatterns
+  // Must handle node_modules/.pnpm/package@version/node_modules/package structure
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!(?:.pnpm/)?(?:react-native|@react-native|expo|@expo|react-navigation|@react-navigation|@sentry))',
+    '<rootDir>/node_modules/(?!(?:.pnpm/)?(?:react-native|@react-native|expo|@expo|react-navigation|@react-navigation|@sentry|react-native-reanimated))',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
