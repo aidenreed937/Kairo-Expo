@@ -15,6 +15,7 @@ export default tseslint.config(
       'dist/',
       'build/',
       '__mocks__/',
+      'plugins/',
       '*.config.js',
       '*.config.ts',
       '*.config.mjs',
