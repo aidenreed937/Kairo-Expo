@@ -15,21 +15,21 @@ module.exports = {
     // Mock for react-native-worklets (may be required by some versions of reanimated)
     'react-native-worklets/plugin': '<rootDir>/__mocks__/react-native-worklets/plugin.js',
   },
+  // Only collect coverage from files that have corresponding tests
+  // Add more patterns as tests are written
   collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
+    'src/features/**/stores/*.{ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/*.test.{ts,tsx}',
     '!src/**/*.spec.{ts,tsx}',
-    '!src/**/index.{ts,tsx}',
   ],
-  // Coverage thresholds - set to 0 for scaffold project
-  // Increase these values as more tests are added
+  // Coverage thresholds - require 100% coverage
   coverageThreshold: {
     global: {
-      branches: 0,
-      functions: 0,
-      lines: 0,
-      statements: 0,
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
     },
   },
 };
