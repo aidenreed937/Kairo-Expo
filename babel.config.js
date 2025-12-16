@@ -1,7 +1,11 @@
 module.exports = function (api) {
   api.cache(true);
   return {
-    presets: ['nativewind/babel', 'babel-preset-expo'],
+    presets: [
+      // NativeWind must be first to process CSS before Expo
+      'nativewind/babel',
+      'babel-preset-expo',
+    ],
     plugins: [
       [
         'module-resolver',
@@ -26,6 +30,8 @@ module.exports = function (api) {
           ],
         },
       ],
+      // Reanimated plugin has to be listed last.
+      'react-native-reanimated/plugin',
     ],
   };
 };

@@ -95,6 +95,15 @@ Configured in `tsconfig.json` and `babel.config.js`:
 - **i18n**: i18next + react-i18next
 - **Monitoring**: Sentry
 
+## Patches & Compatibility
+
+This project uses `pnpm patch` to fix compatibility issues with Expo 52 (RN 0.76) and Reanimated 3.
+
+| Patch File                                 | Target Package               | Reason                                                                                                                            |
+| :----------------------------------------- | :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
+| `react-native-nitro-modules@0.31.10.patch` | `react-native-nitro-modules` | Fixes `ReactModuleInfo` constructor signature mismatch in Android native code for RN 0.76+ (New Architecture).                    |
+| `react-native-css-interop.patch`           | `react-native-css-interop`   | Removes invalid reference to `react-native-worklets/plugin` in Babel config, which is only available in Reanimated 4 (we use v3). |
+
 ## Naming Conventions
 
 | Type                  | Format                          | Example                    |
@@ -162,54 +171,58 @@ presets: [['nativewind/babel', { plugins: [...] }]]
 
 ## Troubleshooting Common Plugin Errors
 
-### 1. "Cannot find module 'xxx/plugin'" in Jest/CI
+### 1. "Cannot find module 'react-native-worklets/plugin'"
 
-**Symptoms**: Tests pass locally but fail in CI with errors like `Cannot find module 'react-native-worklets/plugin'`
+**Symptoms**: Tests or builds fail with `Cannot find module 'react-native-worklets/plugin'`, especially when using NativeWind v4 with Reanimated 3.
+
+**Cause**: `react-native-css-interop` (used by NativeWind) may incorrectly reference `react-native-worklets/plugin` (a Reanimated 4 feature) even when running on Reanimated 3.
+
+**Solution**:
+Do NOT install `react-native-worklets-core` if you are on Reanimated 3. Instead, patch `react-native-css-interop` to remove the invalid plugin reference.
+
+1. Create a patch:
+   ```bash
+   pnpm patch react-native-css-interop
+   ```
+2. Edit the `babel.js` file in the temporary directory to comment out or remove `"react-native-worklets/plugin"`.
+3. Commit the patch:
+   ```bash
+   pnpm patch-commit <path-to-temp-dir>
+   ```
+
+### 2. "Cannot find module 'xxx/plugin'" (General)
+
+**Symptoms**: CI fails with missing plugin errors while local tests pass.
 
 **Causes**:
 
-- Dependency resolution differs between local and CI environments
-- pnpm store caching includes transitive dependencies not in lockfile
-- Native module plugins have different resolution in test environment
-
-**Important**: Distinguish between **Babel plugin resolution** and **Jest module resolution**:
-
-- **Babel plugin errors** (stack trace shows `@babel/core/lib/config/files/plugins.js`): Must install the actual package
-- **Jest runtime errors**: Can use `moduleNameMapper` mocks
+- Dependency resolution differences.
+- Transitive dependencies missing from lockfile.
 
 **Solutions**:
 
-1. **For Babel plugin errors** - Install the package directly:
+- **Babel plugin errors**: Install the package directly if it's a legitimate dependency.
+- **Jest runtime errors**: Use `moduleNameMapper` in `jest.config.js` to mock the module.
 
-   ```bash
-   pnpm add <package-name>
-   ```
+### 3. ".plugins is not a valid Plugin property"
 
-   If you're seeing this error, some config is still referencing `react-native-worklets` even though `react-native-reanimated` already provides worklets. Remove that reference rather than adding the package.
+**Cause**: Passing unsupported options to a Babel preset.
 
-2. **For Jest runtime errors only** - Add a mock:
-   ```bash
-   mkdir -p __mocks__/<package-name>
-   echo "module.exports = function () { return {}; };" > __mocks__/<package-name>/plugin.js
-   ```
-   Then add to `jest.config.js` moduleNameMapper:
-   ```javascript
-   moduleNameMapper: {
-     '<package-name>/plugin': '<rootDir>/__mocks__/<package-name>/plugin.js',
-   }
-   ```
+**Solution**: Ensure presets in `babel.config.js` are simple strings or arrays where the second element is a valid options object supported by that specific preset.
 
-### 2. ".plugins is not a valid Plugin property"
+```javascript
+// ✅ Correct
+presets: ['nativewind/babel', 'babel-preset-expo'],
 
-**Cause**: Passing unsupported options to a Babel preset (see Babel Configuration above)
+// ❌ Wrong (if the preset doesn't support a 'plugins' option)
+presets: [['nativewind/babel', { plugins: [...] }]]
+```
 
-**Solution**: Ensure presets are simple strings, not arrays with options
+### 4. Jest transformIgnorePatterns for pnpm
 
-### 3. Jest transformIgnorePatterns for pnpm
+**Issue**: Jest fails to transform modules within `node_modules` because pnpm uses a nested structure (`.pnpm/package@version/node_modules/package`).
 
-**Issue**: pnpm uses `.pnpm/package@version/node_modules/package` structure
-
-**Solution**: Use pattern that handles both regular and pnpm paths:
+**Solution**: Update `transformIgnorePatterns` in `jest.config.js` to match pnpm paths:
 
 ```javascript
 transformIgnorePatterns: [
@@ -217,11 +230,12 @@ transformIgnorePatterns: [
 ];
 ```
 
-### 4. General Plugin Debugging Steps
+### 5. Native Module Compatibility (New Architecture)
 
-1. **Check local vs CI difference**: Compare node_modules structure
-2. **Verify lockfile**: Ensure `pnpm-lock.yaml` is committed and up-to-date
-3. **Clear caches**: `pnpm store prune && rm -rf node_modules && pnpm install`
-4. **Check transitive dependencies**: `pnpm why <package-name>`
-5. **Review babel.config.js**: Ensure correct preset/plugin order
-6. **Add mocks for test-only issues**: Use `__mocks__/` directory for Jest
+**Issue**: Build fails with native module errors (e.g., `ReactModuleInfo` constructor mismatch) when `newArchEnabled` is true.
+
+**Solution**:
+
+- Check if the library has a newer version supporting RN 0.76+.
+- If not, use `patch-package` (or `pnpm patch`) to fix the native code (Java/Kotlin/ObjC/Swift) locally.
+- Example: `react-native-nitro-modules` may need a patch for `NitroModulesPackage.kt` to match the new `ReactModuleInfo` signature.

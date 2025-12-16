@@ -44,6 +44,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Expo Doctor
+        run: npx expo-doctor
+
       - name: Type Check
         run: pnpm typecheck
 
