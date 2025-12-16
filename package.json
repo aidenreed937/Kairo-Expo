@@ -20,7 +20,7 @@
     "test:coverage": "jest --coverage",
     "quality": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test",
     "prepare": "husky",
-    "doctor": "npx expo doctor"
+    "doctor": "npx expo-doctor"
   },
   "keywords": [
     "react-native",
