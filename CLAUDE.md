@@ -48,15 +48,18 @@ src/
       RootNavigator.tsx   # Navigation setup
 
   core/                   # Business-agnostic infrastructure
+    assets/               # Static assets (images, fonts)
+    components/           # Reusable UI (LoadingIndicator, ErrorView, PrimaryButton)
     config/               # Environment and app configuration
     error/                # AppError model, errorMapper, errorReporter
-    network/              # httpClient (axios), interceptors
-    storage/              # keyValueStorage (MMKV)
-    i18n/                 # i18next setup, locales (en, zh)
-    theme/                # Design tokens and theme
     forms/                # Zod schemas
+    i18n/                 # i18next setup, locales (en, zh)
+    network/              # httpClient (axios), interceptors
+    permissions/          # Permission handling utilities
+    storage/              # keyValueStorage (MMKV)
+    styling/              # Style utilities
+    theme/                # Design tokens and theme
     utils/                # logger, Result type
-    components/           # Reusable UI (LoadingIndicator, ErrorView, PrimaryButton)
 
   features/               # Feature modules (feature-first)
     <feature>/
@@ -141,7 +144,7 @@ See `.claude/skills/feature-generator/SKILL.md` for detailed templates.
 
 - Jest with `jest-expo` preset
 - `@testing-library/react-native` for component testing
-- Coverage threshold: 70% (branches, functions, lines, statements)
+- Coverage threshold: 100% (branches, functions, lines, statements)
 - Tests mirror source structure in `__tests__/`
 - pnpm-compatible `transformIgnorePatterns` configured in `jest.config.js`
 
@@ -239,3 +242,26 @@ transformIgnorePatterns: [
 - Check if the library has a newer version supporting RN 0.76+.
 - If not, use `patch-package` (or `pnpm patch`) to fix the native code (Java/Kotlin/ObjC/Swift) locally.
 - Example: `react-native-nitro-modules` may need a patch for `NitroModulesPackage.kt` to match the new `ReactModuleInfo` signature.
+
+### 6. White Screen / Layout Collapse with NativeWind
+
+**Symptoms**: The app launches without errors, but the screen is completely white or empty. No UI elements are visible, or layout styles (like `flex-1`) seem to be ignored.
+
+**Cause**: NativeWind configuration in `metro.config.js` points to an incorrect or non-existent CSS entry file. If NativeWind cannot find the input file, it fails to generate styles, causing layout collapse (height/width = 0).
+
+**Solution**:
+
+1. Ensure `metro.config.js` points to the correct CSS file location:
+
+   ```javascript
+   // ❌ Wrong (if file is in src/app)
+   input: './global.css';
+
+   // ✅ Correct
+   input: './src/app/global.css';
+   ```
+
+2. **Crucial**: Clear Metro cache after changing the config:
+   ```bash
+   npx expo start -c
+   ```
