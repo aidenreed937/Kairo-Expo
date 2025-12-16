@@ -172,58 +172,19 @@ src/
       routes.ts           # 路由常量/类型（ParamList）
       RootNavigator.tsx   # Root Navigator（Stack/Tabs 汇总）
 
-  core/                   # 无业务的基础设施与通用模块
-    config/
-      env.ts              # Env 抽象（dev/staging/prod）
-      appConfig.ts        # 汇总读取 Env / build-time config
-
-    error/
-      appError.ts         # 域无关错误模型
-      errorMapper.ts      # 将异常/SDK error 映射为 AppError
-      errorReporter.ts    # 上报与记录（Sentry 等）
-
-    forms/                # 表单与校验（可选，但强烈建议脚手架内置）
-      formTypes.ts        # 通用类型与封装（例如 FieldError 映射）
-      zodSchemas.ts       # 可复用的 Schema（按需拆 namespace）
-
-    network/
-      httpClient.ts       # axios/fetch 封装
-      interceptors/
-        authInterceptor.ts
-        loggingInterceptor.ts
-
-    permissions/          # 权限封装（可选，但建议统一收口）
-      permissions.ts      # 权限类型与平台映射
-      usePermission.ts    # 请求/拒绝/引导设置页的统一流程
-
-    storage/
-      keyValueStorage.ts        # MMKV 抽象
-      secureStorage.ts          # Keychain/Keystore 抽象（可选）
-
-    theme/
-      tokens.ts           # 设计 token（颜色/间距/字号）
-      theme.ts            # Theme 对象与 hooks
-
-    styling/              # 样式引擎适配层（可选：nativewind/unistyles/restyle/stylesheet）
-      styling.ts          # 对外统一导出（className / style helpers）
-
-    i18n/
-      i18n.ts             # i18next 初始化与导出
-
-    utils/
-      logger.ts
-      result.ts           # 通用 Result 类型（Ok/Err）
-      extensions/
-        stringExtensions.ts
-
-    assets/               # 资源相关配置（可选）
-      svg.ts              # SVG 导入/包装约定（配合 transformer）
-
-    components/           # 无业务的可复用 UI 组件
-      AppScaffold.tsx
-      LoadingIndicator.tsx
-      ErrorView.tsx
-      PrimaryButton.tsx
+  core/                   # 无业务的基础设施与通用模块（按字母顺序）
+    assets/               # 静态资源（图片、字体）
+    components/           # 无业务的可复用 UI 组件（LoadingIndicator, ErrorView, PrimaryButton）
+    config/               # 环境与应用配置（env.ts, appConfig.ts）
+    error/                # 错误处理（appError.ts, errorMapper.ts, errorReporter.ts）
+    forms/                # 表单与校验（Zod schemas）
+    i18n/                 # 国际化（i18next 初始化，locales/en.json, zh.json）
+    network/              # 网络层（httpClient.ts, interceptors/）
+    permissions/          # 权限封装（权限类型、请求流程）
+    storage/              # 存储层（keyValueStorage.ts - MMKV）
+    styling/              # 样式工具
+    theme/                # 设计 token 与主题
+    utils/                # 工具函数（logger.ts, result.ts）
 
   features/               # Feature-first 的业务模块目录（脚手架只放示例）
     counter/
