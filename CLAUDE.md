@@ -185,7 +185,7 @@ presets: [['nativewind/babel', { plugins: [...] }]]
    pnpm add <package-name>
    ```
 
-   Example: `pnpm add react-native-worklets` (required by babel-preset-expo)
+   If you're seeing this error, some config is still referencing `react-native-worklets` even though `react-native-reanimated` already provides worklets. Remove that reference rather than adding the package.
 
 2. **For Jest runtime errors only** - Add a mock:
    ```bash

@@ -681,7 +681,7 @@ comet create service <service_name>
    pnpm add <package-name>
    ```
 
-   示例：`pnpm add react-native-worklets`（babel-preset-expo 需要）
+   如果报错里出现 `react-native-worklets/plugin`，通常是项目里还有配置引用了它；在 Reanimated 已内置 worklets 的情况下，应移除该引用，而不是额外安装 `react-native-worklets`。
 
 2. **Jest 运行时错误** - 添加 mock：
    ```bash
