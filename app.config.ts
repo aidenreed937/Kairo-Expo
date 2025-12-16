@@ -5,7 +5,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: 'Kairo Expo',
   slug: 'kairo-expo',
   version: '1.0.0',
-  newArchEnabled: true,
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
@@ -31,7 +30,20 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     favicon: './assets/favicon.png',
     bundler: 'metro',
   },
-  plugins: ['expo-localization'],
+  plugins: [
+    'expo-localization',
+    [
+      'expo-build-properties',
+      {
+        android: {
+          newArchEnabled: true,
+        },
+        ios: {
+          newArchEnabled: true,
+        },
+      },
+    ],
+  ],
   extra: {
     eas: {
       projectId: 'your-project-id',
